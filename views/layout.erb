@@ -39,29 +39,16 @@
 
 <% body_class = !session[:logged_in] ? "d-flex justify-content-center align-items-center vh-100 bg-light" : "bg-light py-3" %>
 <body class="<%= body_class %>">
-
+<%= erb :'partials/_flash' %>
 <% if session[:logged_in] %>
   <div class="container w-75">
-    <nav class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <a href="/dashboard" class="btn btn-outline-dark btn-sm me-2">🏠
-          Dashboard</a>
-        <a href="/categories" class="btn btn-outline-secondary btn-sm">🗂
-          Categories</a>
-        <a href="/new" class="btn btn-outline-primary btn-sm me-2">➕ New</a>
-      </div>
-      <form method="post" action="/logout">
-        <button class="btn btn-outline-danger btn-sm">Logout</button>
-      </form>
-    </nav>
-
-    <%= erb :'partials/_flash' %>
+    <%= erb :'partials/_navbar' %>
 
     <%= yield %>
 
     <p class="footer text-center mt-5">Last updated:
       <% if File.exist?(TWEET_COLLECTION) %>
-        <%= File.mtime(TWEET_COLLECTION).strftime("%Y-%m-%d %H:%M") %>
+        <%= format_timestamp(File.mtime(TWEET_COLLECTION).strftime("%Y-%m-%d %H:%M")) %>
       <% else %>
         Never
       <% end %>

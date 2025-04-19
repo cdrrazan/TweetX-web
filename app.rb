@@ -6,6 +6,12 @@ require 'dotenv/load'
 require 'securerandom'
 require_relative './lib/tweetx/scheduler'
 
+use Rack::Session::Cookie,
+    key: 'tweetx_session',
+    path: '/',
+    secret: ENV['SESSION_SECRET'], # SecureRandom.hex(64),
+    expire_after: nil  # Session expires when browser closes unless overridden by "remember me"
+
 enable :sessions
 register Sinatra::Flash
 
@@ -91,12 +97,25 @@ before do
 end
 
 get '/login' do
+  redirect '/dashboard' if logged_in?
   erb :login
 end
 
 post '/login' do
   if params[:username] == ENV['TWEETX_USER'] && params[:password] == ENV['TWEETX_PASS']
     session[:logged_in] = true
+
+    # Set persistent session cookie
+    if params[:remember_me] == "1"
+      response.set_cookie(
+        "tweetx_session",
+        value: request.cookies["tweetx_session"],
+        path: "/",
+        max_age: "2592000", # 30 days in seconds
+        httponly: true
+      )
+    end
+
     flash[:success] = "Successfully logged in!"
     redirect '/dashboard'
   else
@@ -121,7 +140,7 @@ get '/dashboard' do
     []
   end
 
-  # Get the last 10 published tweets
+  # Get the last 4 published tweets
   @published = if tweets_present?(all_published)
     apply_filters(all_published, params).last(4).reverse
   else
