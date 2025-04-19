@@ -226,9 +226,11 @@ post '/tweet-now/:id' do
     tweet = upcoming_tweet[:tweet]
     category = upcoming_tweet[:category]
     formatted = scheduler.format_tweet(tweet)
-    tweet_response_url = scheduler.post_tweet_and_get_url(formatted)
-    scheduler.send_to_published(category, tweet)
-    scheduler.remove_from_tweet_collection(upcoming_tweet[:id])
+    # Remove this line and uncomment the below line when you have the actual tweet posting logic
+    tweet_response_url = 'https://x.com/cdrrazan/status/1905966122580770942'
+    # tweet_response_url = scheduler.post_tweet_and_get_url(formatted)
+    # scheduler.send_to_published(category, tweet)
+    # scheduler.remove_from_tweet_collection(upcoming_tweet[:id])
 
     { success: true, url: tweet_response_url }.to_json
   rescue => e
