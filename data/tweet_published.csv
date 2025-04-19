@@ -1,1 +1,26 @@
 id,category,tweet,timestamp
+a14462a7-2fe5-479e-bf7d-9b59f0d6f5c2,BuiltWith,"2 repos, 1 system. CLI for automation, dashboard for control. That’s TweetX. #BuildInPublic #TweetTools",2025-04-15T04:53:34.764654
+ae39ef68-a181-4e3d-982b-1e52331c3e31,Branding,"Your story matters. Share your journey, not just your wins. #Branding #Authenticity",2025-03-21T07:33:34.764680
+96fe3936-f9f1-4480-bf64-54474d28cdfb,Ebook,Read this before building your next portfolio site. #DevEbook #PersonalBrand,2025-03-23T04:57:34.764703
+28a7cf94-719a-40a2-9531-60a67bd0b4cf,Devtip,"Code is for humans first, machines second. Write it like a story. #CleanCode #DevTips",2025-03-31T00:02:34.764726
+49506f20-7612-43ca-956c-7e1f6e74ae52,Motivation,"Discipline is the shortcut. No hacks, just focus. #NoExcuses #DailyGrind",2025-04-03T07:02:34.764750
+838563d3-9076-4fee-8023-89e0114d49ae,BuiltWith,Used TZInfo to make it timezone-aware for Kathmandu 🇳🇵 #BuiltWithRuby,2025-04-15T01:37:34.764773
+6d67fab9-e75f-4e0d-898c-e0d9202ffd4a,Ebook,You don’t need fancy tools to build a brand—just the right system. I’ve laid it out here → [link] #EbookLaunch,2025-03-22T01:12:34.764798
+45925efe-5613-4edb-85c7-69e97e3537a9,Branding,Every tweet is an asset. Build trust through value. #BrandBuilding #DevMarketing,2025-04-07T21:16:34.764823
+d4015893-50b5-4470-a72f-1054412b5a9d,BuiltWith,"Open-sourced my tweet workflow. It uses CSV instead of a database. Easy to manage, easy to edit. #BuiltWith #DevTools",2025-03-20T07:01:34.764850
+dadfc0b2-b69c-4bec-ab73-ea1cf53e37b4,Devtip,Share what you learn. Teaching makes you better. #DevTips #CodeNewbie,2025-04-07T12:13:34.764876
+aad40f6b-bdc6-4129-94ab-37ce896f5bf8,Branding,People don’t follow code. They follow people. Be human. #DeveloperBrand,2025-03-23T19:06:34.764898
+9f8f9e11-c2ea-4378-ae2b-5733811fc614,Motivation,You won’t always be motivated. That’s why you need habits. Show up even when it’s messy. #Discipline #DailyHabits,2025-03-24T10:15:34.764923
+eca2d0b1-5be3-4eab-b966-1e398366e451,Ebook,You don’t need 10k followers to build a brand. You need direction. That’s what my ebook teaches. #EbookDrop #BuildInPublic,2025-04-04T15:58:34.764951
+40fd9208-c5d2-4592-b721-7bc70fcb536b,Devtip,Learn version control early. Git isn’t just a tool—it’s a superpower. #DevTips #CodeSmarter,2025-04-08T22:43:34.764977
+3807d34a-48b8-4899-9725-7f6b3602297f,Motivation,Stay patient. Stay consistent. That’s how compounding works. #Mindset #Growth,2025-04-02T00:19:34.765001
+202852f6-bf45-47da-a761-6b636e93e239,BuiltWith,TweetX CLI selects smart tweets based on category and time. Then posts it via GitHub Actions. #BuiltWith #OpenSource,2025-03-23T16:25:34.765025
+a949ec12-d35f-44a1-80ea-07565a9819c4,Devtip,Testing isn’t optional. It’s a safety net for future you. #DevTips #TDD,2025-03-21T10:03:34.765052
+a964cac7-27b5-4da3-a1f8-8def5f0e4105,Motivation,10 minutes a day for a year is 60+ hours. Small steps matter. #Consistency #AtomicHabits,2025-04-17T02:51:34.765075
+67b81722-f8d7-4640-9617-34b1f6682bef,Branding,"Write as if 1000 devs will read it. One day, they might. #DeveloperBranding",2025-03-20T23:32:34.765098
+4f41ab20-59c7-455d-b7e1-fe6393957d42,Branding,"Start a blog, a newsletter, or just post weekly. Consistency builds recognition. #DevContent",2025-04-11T17:20:34.765121
+ee96cb07-5382-4c4e-bc32-ce67795411cf,Motivation,No one is ahead of you. No one is behind you. Run your race. #SelfImprovement #Motivation,2025-04-03T16:20:34.765145
+483238f1-e6d1-4dbe-b3c8-e283d61dccff,Motivation,Success isn’t about the grind. It’s about direction. Know your “why.” #Purpose #Motivation,2025-04-04T05:57:34.765169
+dc8032c2-13bb-48a2-a54a-df01e04a7a18,Motivation,Start messy. Refine later. Action beats waiting. #GetStarted #BuildInPublic,2025-04-10T18:08:34.765202
+50724767-cac5-4e57-8e19-975e516b4ab9,Ebook,This ebook is for every dev who wants to stand out online. #DevEbook #BrandingTips,2025-03-27T12:03:34.765225
+1d8a01c2-5de5-46d8-a798-e37b3a880b72,BuiltWith,"I didn’t want another SaaS tool, so I built my own tweet manager. #BuiltWithRuby",2025-04-08T06:11:34.765249
