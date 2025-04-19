@@ -88,6 +88,26 @@ helpers do
     # Move hashtags to their own line
     formatted.sub(/(#[\w]+)/, "\n\n\\1")
   end
+
+  # Pagination for upcoming & published tweets
+  def paginate(collection, params, base_url)
+    page = (params[:page] || 1).to_i
+    per_page = 10
+    total_pages = (collection.size / per_page.to_f).ceil
+    paginated = collection.slice((page - 1) * per_page, per_page) || []
+
+    {
+      items: paginated,
+      pagination: {
+        current: page,
+        total: total_pages,
+        prev: (page > 1 ? page - 1 : nil),
+        next: (page < total_pages ? page + 1 : nil),
+        base_url: base_url,
+        query: URI.encode_www_form(params.reject { |k, _| k == 'page' })
+      }
+    }
+  end
 end
 
 before do
@@ -152,25 +172,31 @@ end
 
 get '/upcoming' do
   ensure_required_csvs
+  @categories = load_categories
 
   all_upcoming = read_csv(TWEET_COLLECTION)
   published = read_csv(TWEET_PUBLISHED)
   published_texts = published.map { |r| r['tweet'].to_s.strip }
 
-  @upcoming = all_upcoming.reject { |r| published_texts.include?(r['tweet'].to_s.strip) }
-  @categories = load_categories
-
-  # Apply filters
-  @upcoming = apply_filters(@upcoming, params)
+  # Apply filters & Paginate
+  upcoming = all_upcoming.reject { |r| published_texts.include?(r['tweet'].to_s.strip) }
+  filtered = apply_filters(upcoming, params)
+  result = paginate(filtered, params, '/upcoming')
+  @upcoming = result[:items]
+  @pagination = result[:pagination]
 
   erb :upcoming
 end
 
 get '/published' do
   ensure_required_csvs
-
-  @published = apply_filters(read_csv(TWEET_PUBLISHED), params)
   @categories = load_categories
+  # Apply filters & Paginate
+  filtered = apply_filters(read_csv(TWEET_PUBLISHED), params)
+  result = paginate(filtered, params, '/published')
+  @published = result[:items]
+  @pagination = result[:pagination]
+
   erb :published
 end
 

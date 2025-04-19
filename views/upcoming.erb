@@ -1,4 +1,11 @@
 <h3 class="mb-3">Upcoming | All Tweets</h3>
+<!-- Filter form -->
 <%= erb :'partials/_filter', locals: { path: '/upcoming', categories: @categories, params: @params } %>
+
+<!-- Tweet table -->
 <%= erb :'partials/_tweet_table', locals: { tweets: @upcoming } %>
+
+<!-- Pagination -->
+<%= erb :'partials/_pagination', locals: { pagination: @pagination } %>
+
 <a href="/dashboard" class="btn btn-sm btn-outline-secondary mt-3">← Back to Dashboard</a>
