@@ -116,6 +116,14 @@ before do
   end
 end
 
+get '/' do
+  if session[:logged_in]
+    redirect '/dashboard'
+  else
+    redirect '/login' # future optional page
+  end
+end
+
 get '/login' do
   redirect '/dashboard' if logged_in?
   erb :login
