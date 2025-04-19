@@ -1,0 +1,122 @@
+<h2 class="mb-4">➕ Add New Tweets</h2>
+
+<form action="/submit" method="post" id="tweetForm">
+  <div class="mb-3">
+    <label class="form-label">Select Categories</label>
+    <div class="dropdown">
+      <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        Choose Categories
+      </button>
+      <ul class="dropdown-menu p-3">
+        <% @categories.each do |category| %>
+          <li>
+            <div class="form-check">
+              <input class="form-check-input category-checkbox" type="checkbox" name="categories[]" id="<%= category %>" value="<%= category %>" onchange="updateCategoryList()">
+              <label class="form-check-label" for="<%= category %>"><%= category.capitalize %></label>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <strong>Selected:</strong>
+      <span id="selectedCategories" class="d-inline-flex gap-2 flex-wrap"></span>
+    </div>
+  </div>
+
+  <div class="mb-3 w-50">
+    <label for="tweets" class="form-label">Tweets (one per line)</label>
+    <textarea id="tweets" name="tweets" rows="8" class="form-control" oninput="validateMultiTweets()" required></textarea>
+    <div id="tweetValidationFeedback" class="form-text text-danger"></div>
+  </div>
+
+  <div class="mt-3" id="previewBox" style="display: none;">
+    <label class="form-label">Preview</label>
+    <div class="border rounded p-3 bg-white" id="previewText" style="white-space: pre-wrap;"></div>
+  </div>
+
+  <button type="submit" class="btn btn-success">Add to Collection</button>
+  <a href="/dashboard" class="btn btn-secondary">️Back</a>
+</form>
+
+<div class="position-fixed bottom-0 end-0 p-3 d-none" id="categoryToastWrapper" style="z-index: 1080;">
+  <div id="categorySelectionToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        🚫 Please select at least one category before saving.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateCategoryList() {
+    const checkboxes = document.querySelectorAll('.category-checkbox');
+    const output = document.getElementById('selectedCategories');
+    output.innerHTML = ''; // Clear existing
+
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-info text-dark';
+        badge.innerText = cb.value;
+        output.appendChild(badge);
+      }
+    });
+  }
+
+  // Initialize on page load (e.g., after going back with history)
+  window.onload = updateCategoryList;
+</script>
+
+<script>
+  function validateMultiTweets() {
+    const textarea = document.getElementById("tweets");
+    const feedback = document.getElementById("tweetValidationFeedback");
+    const tweets = textarea.value.trim().split("\n").filter(line => line.trim() !== "");
+
+    let errors = [];
+
+    tweets.forEach((line, index) => {
+      if (line.length > 270) {
+        errors.push(`Line ${index + 1} exceeds 270 characters (${line.length})`);
+      }
+    });
+
+    if (errors.length) {
+      feedback.innerHTML = errors.join("<br>");
+      feedback.style.display = "block";
+    } else {
+      feedback.style.display = "none";
+    }
+
+    // Prevent form submission if errors exist
+    const form = textarea.closest("form");
+    form.onsubmit = () => {
+      if (errors.length) {
+        alert("🚫 Some tweets exceed 270 characters. Please fix them.");
+        return false;
+      }
+    };
+  }
+</script>
+
+<script>
+  document.getElementById("tweetForm").addEventListener("submit", function(event) {
+    const selectedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
+
+    if (selectedCategories.length === 0) {
+      event.preventDefault(); // 🚫 Prevent form submission
+
+      const wrapper = document.getElementById("categoryToastWrapper");
+      const toastEl = document.getElementById("categorySelectionToast");
+      if (wrapper && toastEl) {
+        wrapper.classList.remove("d-none"); // ✅ Unhide wrapper
+        const toast = new bootstrap.Toast(toastEl, { delay: 5000 }); // ⏱ Auto-hide after 5s
+      }
+      return false;
+    }
+  });
+</script>

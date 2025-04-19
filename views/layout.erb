@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= @title || "TweetX" %></title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <!-- Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+      body {
+          font-family: 'Outfit', sans-serif;
+
+          .toast-container {
+              z-index: 1080;
+          }
+
+          .badge {
+              font-size: 0.9rem;
+              padding: 0.4em 0.75em;
+          }
+      }
+
+      .nav-link {
+          font-weight: 500;
+      }
+
+      .footer {
+          font-size: 0.9rem;
+          color: #777;
+          margin-top: 4rem;
+      }
+  </style>
+</head>
+
+<% body_class = !session[:logged_in] ? "d-flex justify-content-center align-items-center vh-100 bg-light" : "bg-light py-3" %>
+<body class="<%= body_class %>">
+
+<% if session[:logged_in] %>
+  <div class="container w-75">
+    <nav class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <a href="/dashboard" class="btn btn-outline-dark btn-sm me-2">🏠
+          Dashboard</a>
+        <a href="/categories" class="btn btn-outline-secondary btn-sm">🗂
+          Categories</a>
+        <a href="/new" class="btn btn-outline-primary btn-sm me-2">➕ New</a>
+      </div>
+      <form method="post" action="/logout">
+        <button class="btn btn-outline-danger btn-sm">Logout</button>
+      </form>
+    </nav>
+
+    <%= erb :'partials/_flash' %>
+
+    <%= yield %>
+
+    <p class="footer text-center mt-5">Last updated:
+      <% if File.exist?(TWEET_COLLECTION) %>
+        <%= File.mtime(TWEET_COLLECTION).strftime("%Y-%m-%d %H:%M") %>
+      <% else %>
+        Never
+      <% end %>
+    </p>
+  </div>
+
+<% else %>
+  <%= yield %>
+<% end %>
+
+<script>
+  // Initialize and show all toasts
+  document.querySelectorAll('.toast').forEach(toastEl => {
+    const toast = new bootstrap.Toast(toastEl, {delay: 5000});
+    toast.show();
+  });
+</script>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+  <div id="copyToast" class="toast align-items-center text-bg-secondary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Preview copied to clipboard
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

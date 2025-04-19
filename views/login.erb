@@ -1,0 +1,17 @@
+<div class="card p-4 shadow" style="min-width: 320px;">
+  <h2 class="mb-3">🔐 TweetX Login</h2>
+  <% if @error %>
+    <div class="alert alert-danger"><%= @error %></div>
+  <% end %>
+  <form method="post" action="/login">
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input class="form-control" type="text" name="username" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input class="form-control" type="password" name="password" required>
+    </div>
+    <button class="btn btn-primary w-100">🔓 Login</button>
+  </form>
+</div>

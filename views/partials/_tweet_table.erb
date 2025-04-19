@@ -1,0 +1,173 @@
+<p class="text-muted">🔍 Showing <%= tweets.size %> result(s).</p>
+<table class="table table-bordered table-sm table-hover align-middle mt-3">
+  <thead class="table-light">
+  <tr>
+    <th style="width: 20%;">ID</th>
+    <th style="width: 10%;">Category</th>
+    <th style="width: 45%;">Tweet</th>
+    <% if tweets.first&.key?('timestamp') %>
+      <th style="width: 15%;">Published At</th>
+    <% end %>
+    <th style="width: <%= tweets.first&.key?('timestamp') ? '10%' : '25%' %>;">Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if tweets && tweets.any? %>
+    <% tweets.each do |row| %>
+      <tr>
+        <td><%= row['id'] %></td>
+        <td><%= row['category'].to_s.capitalize %></td>
+        <td style="white-space: pre-wrap;"><%= row['tweet'] %></td>
+
+        <% if row.key?('timestamp') %>
+          <td><%= format_timestamp(row['timestamp']) %></td>
+        <% end %>
+
+        <td>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <% unless row.key?('timestamp') %>
+              <!-- Edit and Delete only for upcoming -->
+              <a href="/edit/<%= row['id'] %>" class="btn btn-sm btn-warning" title="Edit">Edit</a>
+              <form action="/delete/<%= row['id'] %>" method="get" onsubmit="return confirm('Are you sure you want to delete this tweet?')">
+                <button class="btn btn-sm btn-danger" title="Delete">Delete</button>
+              </form>
+
+              <button
+                class="btn btn-sm btn-primary"
+                onclick="tweetNow('<%= row['id'] %>', `<%= escape_js(format_tweet(row['tweet'])) %>`)"
+                title="Tweet Now"
+              >Tweet
+              </button>
+            <% end %>
+
+            <!-- Copy available for both -->
+            <% if row['tweet'] %>
+              <button class="btn btn-sm btn-secondary" onclick="copyFormattedTweet('<%= escape_js(row['tweet']) %>')" title="Copy to clipboard">Copy</button>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td colspan="<%= tweets.first&.key?('timestamp') ? 5 : 4 %>" class="text-center text-muted">No
+        tweets available.
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<script>
+  function copyFormattedTweet(text) {
+    const firstPeriodIndex = text.indexOf('.') + 1;
+    const first = text.slice(0, firstPeriodIndex).trim();
+    const rest = text.slice(firstPeriodIndex).trim();
+
+    const hashtagIndex = rest.search(/\s#\w/);
+    let main = rest;
+    let tags = '';
+
+    if (hashtagIndex !== -1) {
+      main = rest.slice(0, hashtagIndex).trim();
+      tags = rest.slice(hashtagIndex).trim();
+    }
+
+    const final = [first, main, tags].filter(Boolean).join('\n\n');
+
+    const temp = document.createElement('textarea');
+    temp.style.position = 'absolute';
+    temp.style.left = '-9999px';
+    temp.value = final;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+
+    const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+    toast.show();
+  }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterForm = document.querySelector("form[method='get']");
+    if (filterForm) {
+      filterForm.addEventListener("submit", function (e) {
+        const inputs = Array.from(this.querySelectorAll("input, select"));
+        inputs.forEach(input => {
+          if (!input.value.trim()) input.remove(); // Remove empty fields
+        });
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const hash = window.location.hash;
+    if (hash) {
+      const tabTrigger = document.querySelector(`button[data-bs-target="${hash}"]`);
+      if (tabTrigger) new bootstrap.Tab(tabTrigger).show();
+    }
+
+    // Update the URL when a tab is clicked
+    document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+      btn.addEventListener("shown.bs.tab", function (e) {
+        const target = this.getAttribute("data-bs-target");
+        if (history.pushState) {
+          history.replaceState(null, null, target);
+        } else {
+          location.hash = target;
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  function tweetNow(id, tweetText) {
+    Swal.fire({
+      title: "Post this tweet?",
+      html: `<p style='text-align:left; white-space: pre-line;'>${tweetText}</p>`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Tweet it!",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        // 🌀 Show loading state
+        Swal.fire({
+          title: 'Tweeting...',
+          html: 'Please wait while we publish your tweet...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        fetch(`/tweet-now/${id}`, {
+          method: "POST"
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire({
+                title: "🎉 Tweet posted!",
+                html: `Your tweet has been posted successfully.<br><br><a href="${data.url}" target="_blank">View Tweet</a>`,
+                icon: "success"
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire("Oops!", data.message, "error");
+            }
+          })
+          .catch(err => {
+            Swal.fire("❌ Error", "Something went wrong while posting the tweet.", "error");
+          });
+      }
+    });
+  }
+</script>

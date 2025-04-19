@@ -1,0 +1,9 @@
+# Custom Dir
+.idea
+
+# App related
+.env
+.byebug_history
+
+# Misc
+.DS_Store

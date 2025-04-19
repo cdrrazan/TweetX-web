@@ -1,0 +1,24 @@
+<form method="get" action="<%= path %>" class="row g-2 mb-3">
+  <div class="col-md-3">
+    <input type="text" name="id" value="<%= params[:id] %>" class="form-control" placeholder="Filter by ID">
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="search" value="<%= params[:search] %>" class="form-control" placeholder="Search tweet text">
+  </div>
+  <div class="col-md-3">
+    <select name="category" class="form-select">
+      <option value="">All Categories</option>
+      <% @categories.each do |category| %>
+        <option value="<%= category %>" <%= 'selected' if params[:category] == category %>><%= category.capitalize %></option>
+      <% end %>
+    </select>
+  </div>
+  <div class="col-md-3 d-grid">
+    <button class="btn btn-outline-primary">🔍 Apply Filters</button>
+  </div>
+
+  <% anchor = path.include?('#') ? path.partition('#').last : nil %>
+  <% anchor_part = anchor && !anchor.empty? ? "##{anchor}" : '' %>
+  <a href="<%= path.split('#').first + anchor_part %>" class="btn btn-sm btn-link mt-2">🔄 Reset Filters</a>
+</form>
+

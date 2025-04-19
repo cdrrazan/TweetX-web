@@ -1,0 +1,4 @@
+<h3 class="mb-3">Published | All Tweets</h3>
+<%= erb :'partials/_filter', locals: { path: '/published', categories: @categories, params: @params } %>
+<%= erb :'partials/_tweet_table', locals: { tweets: @published } %>
+<a href="/dashboard" class="btn btn-sm btn-outline-secondary mt-3">← Back to Dashboard</a>

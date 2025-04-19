@@ -1,0 +1,52 @@
+<h2 class="mb-4">✏️ Edit Tweet</h2>
+
+<form action="/update/<%= @tweet['id'] %>" method="post" class="mb-4 w-75">
+  <div class="mb-3">
+    <label class="form-label">Category</label>
+    <select name="category" class="form-select" required>
+      <% @categories.each do |cat| %>
+        <option value="<%= cat %>" <%= "selected" if cat == @tweet['category'] %>><%= cat.capitalize %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Tweet Text</label>
+    <textarea name="tweet" id="tweetText" class="form-control" rows="4" required oninput="updateEditPreview()"><%= @tweet['tweet'] %></textarea>
+    <div id="charCount" class="form-text">0 / 280 characters</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Preview</label>
+    <div class="border rounded bg-white p-3" id="editPreviewText" style="white-space: pre-line;"></div>
+  </div>
+
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="/dashboard" class="btn btn-secondary">Back</a>
+</form>
+
+<script>
+  function formatTweet(text) {
+    let firstBreak = text.indexOf('.') + 1;
+    let first = text.slice(0, firstBreak).trim();
+    let rest = text.slice(firstBreak).trim();
+
+    const hashIndex = rest.search(/\s#\w/);
+    let main = rest;
+    let tags = '';
+
+    if (hashIndex !== -1) {
+      main = rest.slice(0, hashIndex).trim();
+      tags = rest.slice(hashIndex).trim();
+    }
+
+    return [first, main, tags].filter(Boolean).join("\n\n");
+  }
+
+  function updateEditPreview() {
+    const text = document.getElementById("tweetText").value;
+    document.getElementById("editPreviewText").innerText = formatTweet(text);
+  }
+
+  window.onload = updateEditPreview;
+</script>

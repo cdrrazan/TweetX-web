@@ -1,0 +1,22 @@
+<h2 class="mb-4">🗂 Manage Categories</h2>
+
+<form method="post" class="mb-4 d-flex gap-2">
+  <input type="text" name="category" class="form-control" placeholder="New category" required>
+  <button type="submit" class="btn btn-success">➕ Add</button>
+</form>
+
+<ul class="list-group">
+  <% @categories.each do |cat| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <form method="post" action="/categories/edit/<%= cat.capitalize %>" class="d-flex align-items-center gap-2 w-100">
+        <input type="text" name="new" class="form-control" value="<%= cat %>" required>
+        <button class="btn btn-sm btn-warning">✏️ Update</button>
+      </form>
+      <form method="post" action="/categories/delete/<%= cat %>" onsubmit="return confirm('Are you sure?')" class="ms-2">
+        <button class="btn btn-sm btn-danger">🗑 Delete</button>
+      </form>
+    </li>
+  <% end %>
+</ul>
+
+<a href="/dashboard" class="btn btn-secondary mt-4">Back</a>
