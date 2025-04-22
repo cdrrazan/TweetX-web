@@ -108,6 +108,14 @@ helpers do
       }
     }
   end
+
+  # View helpers
+  def view_all_links(url)
+    query = URI.encode_www_form(params.reject { |_, v| v.nil? || v.strip.empty? })
+    view_all_links = "/#{url}"
+    view_all_links += "?#{query}" unless query.empty?
+    view_all_links
+  end
 end
 
 before do
@@ -188,7 +196,7 @@ get '/upcoming' do
 
   # Apply filters & Paginate
   upcoming = all_upcoming.reject { |r| published_texts.include?(r['tweet'].to_s.strip) }
-  filtered = apply_filters(upcoming, params)
+  filtered = apply_filters(upcoming, params).reverse
   result = paginate(filtered, params, '/upcoming')
   @upcoming = result[:items]
   @pagination = result[:pagination]
@@ -200,7 +208,7 @@ get '/published' do
   ensure_required_csvs
   @categories = load_categories
   # Apply filters & Paginate
-  filtered = apply_filters(read_csv(TWEET_PUBLISHED), params)
+  filtered = apply_filters(read_csv(TWEET_PUBLISHED), params).reverse
   result = paginate(filtered, params, '/published')
   @published = result[:items]
   @pagination = result[:pagination]
@@ -294,6 +302,7 @@ end
 
 # Edit tweet
 get '/edit/:id' do
+  @redirect_to = params[:redirect_to] || '/dashboard'
   @tweets = CSV.read(TWEET_COLLECTION, headers: true)
   @tweet = @tweets.find { |row| row['id'] == params[:id] }
   @categories = load_categories
@@ -334,7 +343,8 @@ post '/update/:id' do
   end
 
   flash[:success] = "Tweet successfully updated!"
-  redirect '/dashboard'
+  redirect_to = params[:redirect_to] || '/dashboard'
+  redirect redirect_to
 end
 
 # Delete tweet
@@ -348,7 +358,8 @@ get '/delete/:id' do
   end
 
   flash[:success] = "Tweet deleted successfully!"
-  redirect '/dashboard'
+  redirect_to = params[:redirect_to] || '/dashboard'
+  redirect redirect_to
 end
 
 # Show all categories
