@@ -1,4 +1,5 @@
-<form method="get" action="<%= path %>" class="row g-2 mb-3">
+<% base_path, anchor = path.split('#') %>
+<form id="filter-form" class="row g-2 mb-3" data-path="<%= base_path %>" data-anchor="<%= anchor %>">
   <div class="col-md-3">
     <input type="text" name="id" value="<%= params[:id] %>" class="form-control" placeholder="Filter by ID">
   </div>
@@ -14,14 +15,52 @@
     </select>
   </div>
   <div class="col-md-3 d-grid">
-    <button class="btn btn-outline-primary">🔍 Apply Filters</button>
+    <button type="submit" class="btn btn-outline-primary">🔍 Apply Filters</button>
   </div>
 
-  <% anchor = path.include?('#') ? path.partition('#').last : nil %>
   <button type="button" class="btn btn-sm btn-link" onclick="resetFilters('<%= anchor %>')">🔄 Reset Filters</button>
 </form>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('filter-form');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const basePath = form.dataset.path;
+      const anchor = form.dataset.anchor;
+      const inputs = Array.from(form.querySelectorAll('input, select'));
+      const params = new URLSearchParams();
+
+      inputs.forEach(input => {
+        if (input.name && input.value.trim() !== '') {
+          params.append(input.name, input.value.trim());
+        }
+      });
+
+      const queryString = params.toString();
+      const url = `${basePath}${queryString ? '?' + queryString : ''}#${anchor}`;
+
+      // Replace state without scrolling
+      history.replaceState(null, '', url);
+
+      // Reload the page without jumping
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      location.reload();
+    });
+
+    // Prevent auto-scroll on hash
+    if (window.location.hash) {
+      const hash = window.location.hash;
+      const el = document.querySelector(hash);
+      if (el) {
+        // Prevent scroll to anchor after reload
+        history.scrollRestoration = 'manual';
+      }
+    }
+  });
+
   function resetFilters(anchor) {
     const base = window.location.pathname;
     const hash = anchor ? `#${anchor}` : '';

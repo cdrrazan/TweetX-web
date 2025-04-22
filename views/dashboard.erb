@@ -17,11 +17,10 @@
   <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
     <div class="card shadow-sm border-0">
       <div class="card-body">
-        <%= erb :'partials/_filter', locals: { path: '/dashboard#upcoming', categories: @categories, params: @params } %>
-
         <% if @upcoming.any? %>
+          <%= erb :'partials/_filter', locals: { path: '/dashboard#upcoming', categories: @categories, params: @params } %>
           <%= erb :'partials/_tweet_table', locals: { tweets: @upcoming } %>
-          <a href="/upcoming" class="btn btn-sm btn-outline-primary mt-2">🔍 View All Upcoming</a>
+          <a href="<%= view_all_links('upcoming') %>" class="btn btn-sm btn-outline-primary mt-2">🔍 View All Upcoming</a>
         <% else %>
           <div class="alert alert-info mb-0">No upcoming tweets available.</div>
         <% end %>
@@ -32,11 +31,10 @@
   <div class="tab-pane fade" id="published" role="tabpanel" aria-labelledby="published-tab">
     <div class="card shadow-sm border-0">
       <div class="card-body">
-        <%= erb :'partials/_filter', locals: { path: '/dashboard#published', categories: @categories, params: @params } %>
 
         <% if @published.any? %>
           <%= erb :'partials/_tweet_table', locals: { tweets: @published } %>
-          <a href="/published" class="btn btn-sm btn-outline-success mt-2">📘 View All Published</a>
+          <a href="<%= view_all_links('published') %>" class="btn btn-sm btn-outline-success mt-2">📘 View All Published</a>
         <% else %>
           <div class="alert alert-light mb-0">No published tweets yet.</div>
         <% end %>

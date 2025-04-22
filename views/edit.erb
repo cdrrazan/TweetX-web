@@ -1,6 +1,7 @@
 <h2 class="mb-4">✏️ Edit Tweet</h2>
 
 <form action="/update/<%= @tweet['id'] %>" method="post" class="mb-4 w-75">
+  <input type="hidden" name="redirect_to" value="<%= @redirect_to %>">
   <div class="mb-3">
     <label class="form-label">Category</label>
     <select name="category" class="form-select" required>
