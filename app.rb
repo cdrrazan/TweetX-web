@@ -171,14 +171,14 @@ get '/dashboard' do
   published_texts = all_published.map { |r| r['tweet'].to_s.strip }
   filtered_upcoming = all_upcoming.reject { |r| published_texts.include?(r['tweet'].to_s.strip) }
   @upcoming = if tweets_present?(filtered_upcoming)
-    apply_filters(filtered_upcoming, params).last(4).reverse
+    apply_filters(filtered_upcoming, params).last(5).reverse
   else
     []
   end
 
   # Get the last 4 published tweets
   @published = if tweets_present?(all_published)
-    apply_filters(all_published, params).last(4).reverse
+    apply_filters(all_published, params).last(6).reverse
   else
     []
   end
