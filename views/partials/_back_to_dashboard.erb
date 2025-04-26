@@ -1,0 +1,8 @@
+<%
+  tab = case request.path
+    when '/upcoming' then '#upcoming'
+    when '/published' then '#published'
+    else ''
+  end
+%>
+<a href="/dashboard<%= tab %>" class="btn btn-outline-secondary btn-sm mb-3">← Back to Dashboard</a>
