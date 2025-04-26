@@ -1,43 +1,59 @@
-<h2 class="mb-4 fw-semibold">📊 TweetX Dashboard</h2>
+<div class="container py-4">
+  <h2 class="mb-4 fw-semibold text-center">📊 Dashboard</h2>
 
-<ul class="nav nav-tabs nav-fill border-0" id="tweetTabs" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active d-flex align-items-center gap-2" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
-      <i class="bi bi-hourglass-split"></i> <span>Upcoming</span>
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link d-flex align-items-center gap-2" id="published-tab" data-bs-toggle="tab" data-bs-target="#published" type="button" role="tab" aria-controls="published" aria-selected="false">
-      <i class="bi bi-check-circle"></i> <span>Published</span>
-    </button>
-  </li>
-</ul>
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs nav-fill border-0" id="tweetTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active d-flex align-items-center justify-content-center gap-2" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+        <i class="bi bi-hourglass-split"></i> <span>Upcoming</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link d-flex align-items-center justify-content-center gap-2" id="published-tab" data-bs-toggle="tab" data-bs-target="#published" type="button" role="tab" aria-controls="published" aria-selected="false">
+        <i class="bi bi-check-circle"></i> <span>Published</span>
+      </button>
+    </li>
+  </ul>
 
-<div class="tab-content mt-3" id="tweetTabsContent">
-  <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <% if @upcoming.any? %>
-          <%= erb :'partials/_filter', locals: { path: '/dashboard#upcoming', categories: @categories, params: @params } %>
-          <%= erb :'partials/_tweet_table', locals: { tweets: @upcoming } %>
-          <a href="<%= view_all_links('upcoming') %>" class="btn btn-sm btn-outline-primary mt-2">🔍 View All Upcoming</a>
-        <% else %>
-          <div class="alert alert-info mb-0">No upcoming tweets available.</div>
-        <% end %>
+  <!-- Tabs Content -->
+  <div class="tab-content mt-3" id="tweetTabsContent">
+
+    <!-- Upcoming Tab -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <% if @upcoming.any? %>
+            <%= erb :'partials/_filter', locals: { path: '/dashboard#upcoming', categories: @categories, params: @params } %>
+            <%= erb :'partials/_tweet_table', locals: { tweets: @upcoming } %>
+
+            <div class="text-center mt-3">
+              <a href="<%= view_all_links('upcoming') %>" class="btn btn-outline-primary btn-sm">
+                🔍 View All Upcoming
+              </a>
+            </div>
+          <% else %>
+            <div class="alert alert-info text-center mb-0">No upcoming tweets available.</div>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="tab-pane fade" id="published" role="tabpanel" aria-labelledby="published-tab">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
+    <!-- Published Tab -->
+    <div class="tab-pane fade" id="published" role="tabpanel" aria-labelledby="published-tab">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <% if @published.any? %>
+            <%= erb :'partials/_tweet_table', locals: { tweets: @published } %>
 
-        <% if @published.any? %>
-          <%= erb :'partials/_tweet_table', locals: { tweets: @published } %>
-          <a href="<%= view_all_links('published') %>" class="btn btn-sm btn-outline-success mt-2">📘 View All Published</a>
-        <% else %>
-          <div class="alert alert-light mb-0">No published tweets yet.</div>
-        <% end %>
+            <div class="text-center mt-3">
+              <a href="<%= view_all_links('published') %>" class="btn btn-outline-success btn-sm">
+                📘 View All Published
+              </a>
+            </div>
+          <% else %>
+            <div class="alert alert-light text-center mb-0">No published tweets yet.</div>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

@@ -1,12 +1,28 @@
-<nav class="d-flex justify-content-between align-items-center mb-4 mt-3">
-  <div>
-    <a href="/dashboard" class="btn btn-outline-dark btn-sm me-2">🏠
-      Dashboard</a>
-    <a href="/categories" class="btn btn-outline-secondary btn-sm">🗂
-      Categories</a>
-    <a href="/new" class="btn btn-outline-primary btn-sm me-2">➕ New</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light rounded shadow-sm px-3 py-2 mb-4">
+  <div class="container-fluid">
+
+    <!-- Left: Logo -->
+    <a href="/dashboard" class="navbar-brand fw-bold">TweetX</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+
+      <!-- Center: Navigation links -->
+      <div class="mx-auto d-flex flex-wrap gap-2 justify-content-center">
+        <a href="/dashboard" class="btn btn-outline-success btn-sm">🏠 Dashboard</a>
+        <a href="/categories" class="btn btn-outline-secondary btn-sm">🗂 Categories</a>
+        <a href="/new" class="btn btn-outline-primary btn-sm">➕ New</a>
+      </div>
+
+      <!-- Right: Logout -->
+      <form method="post" action="/logout" class="d-flex">
+        <button class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+      </form>
+
+    </div>
   </div>
-  <form method="post" action="/logout">
-    <button class="btn btn-outline-danger btn-sm">Logout</button>
-  </form>
 </nav>

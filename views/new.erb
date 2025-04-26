@@ -1,45 +1,56 @@
 <h2 class="mb-4">➕ Add New Tweets</h2>
 
-<form action="/submit" method="post" id="tweetForm">
-  <div class="mb-3">
-    <label class="form-label">Select Categories</label>
-    <div class="dropdown">
-      <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        Choose Categories
-      </button>
-      <ul class="dropdown-menu p-3">
-        <% @categories.each do |category| %>
-          <li>
-            <div class="form-check">
-              <input class="form-check-input category-checkbox" type="checkbox" name="categories[]" id="<%= category %>" value="<%= category %>" onchange="updateCategoryList()">
-              <label class="form-check-label" for="<%= category %>"><%= category.capitalize %></label>
-            </div>
-          </li>
-        <% end %>
-      </ul>
+<div class="card p-4 shadow-sm">
+  <form action="/submit" method="post" id="tweetForm" class="row g-3">
+
+    <!-- Category Selection -->
+    <div class="col-12">
+      <label class="form-label">Select Categories</label>
+      <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Choose Categories
+        </button>
+        <ul class="dropdown-menu p-3" style="max-height: 300px; overflow-y: auto;">
+          <% @categories.each do |category| %>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input category-checkbox" type="checkbox" name="categories[]" id="<%= category %>" value="<%= category %>" onchange="updateCategoryList()">
+                <label class="form-check-label" for="<%= category %>"><%= category.capitalize %></label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="mt-3">
+        <strong>Selected:</strong>
+        <span id="selectedCategories" class="d-inline-flex flex-wrap gap-2"></span>
+      </div>
     </div>
 
-    <div class="mt-4">
-      <strong>Selected:</strong>
-      <span id="selectedCategories" class="d-inline-flex gap-2 flex-wrap"></span>
+    <!-- Tweet Textarea -->
+    <div class="col-12">
+      <label for="tweets" class="form-label">Tweets (one per line)</label>
+      <textarea id="tweets" name="tweets" rows="8" class="form-control" oninput="validateMultiTweets()" required></textarea>
+      <div id="tweetValidationFeedback" class="form-text text-danger small mt-1"></div>
     </div>
-  </div>
 
-  <div class="mb-3 w-50">
-    <label for="tweets" class="form-label">Tweets (one per line)</label>
-    <textarea id="tweets" name="tweets" rows="8" class="form-control" oninput="validateMultiTweets()" required></textarea>
-    <div id="tweetValidationFeedback" class="form-text text-danger"></div>
-  </div>
+    <!-- Preview Box -->
+    <div class="col-12" id="previewBox" style="display: none;">
+      <label class="form-label">Preview</label>
+      <div class="border rounded bg-light p-3" id="previewText" style="white-space: pre-wrap; min-height: 120px;"></div>
+    </div>
 
-  <div class="mt-3" id="previewBox" style="display: none;">
-    <label class="form-label">Preview</label>
-    <div class="border rounded p-3 bg-white" id="previewText" style="white-space: pre-wrap;"></div>
-  </div>
+    <!-- Buttons -->
+    <div class="col-12 d-flex gap-2 mt-3">
+      <button type="submit" class="btn btn-success">Add to Collection</button>
+      <a href="/dashboard" class="btn btn-secondary">Back</a>
+    </div>
 
-  <button type="submit" class="btn btn-success">Add to Collection</button>
-  <a href="/dashboard" class="btn btn-secondary">️Back</a>
-</form>
+  </form>
+</div>
 
+<!-- Category Toast -->
 <div class="position-fixed bottom-0 end-0 p-3 d-none" id="categoryToastWrapper" style="z-index: 1080;">
   <div id="categorySelectionToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">

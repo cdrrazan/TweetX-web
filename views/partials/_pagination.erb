@@ -1,27 +1,32 @@
 <% if pagination[:total] > 1 %>
-  <nav class="mt-3 mb-3 d-flex justify-content-between align-items-center">
+  <nav class="mt-4 mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
 
-    <% if pagination[:prev] %>
-      <a class="btn btn-outline-secondary btn-sm"
-         href="<%= "#{pagination[:base_url]}?page=#{pagination[:prev]}&#{pagination[:query]}" %>">
-        ← Previous
-      </a>
-    <% else %>
-      <span></span>
-    <% end %>
+      <!-- Previous Button -->
+      <% if pagination[:prev] %>
+        <a class="btn btn-outline-secondary btn-sm"
+           href="<%= "#{pagination[:base_url]}?page=#{pagination[:prev]}&#{pagination[:query]}" %>">
+          ← Previous
+        </a>
+      <% else %>
+        <span class="invisible btn btn-outline-secondary btn-sm">Placeholder</span>
+      <% end %>
 
-    <small class="text-muted">
-      Page <%= pagination[:current] %> of <%= pagination[:total] %>
-    </small>
+      <!-- Page Info -->
+      <div class="text-center flex-grow-1 text-muted small">
+        Page <strong><%= pagination[:current] %></strong> of <strong><%= pagination[:total] %></strong>
+      </div>
 
-    <% if pagination[:next] %>
-      <a class="btn btn-outline-secondary btn-sm"
-         href="<%= "#{pagination[:base_url]}?page=#{pagination[:next]}&#{pagination[:query]}" %>">
-        Next →
-      </a>
-    <% else %>
-      <span></span>
-    <% end %>
+      <!-- Next Button -->
+      <% if pagination[:next] %>
+        <a class="btn btn-outline-secondary btn-sm"
+           href="<%= "#{pagination[:base_url]}?page=#{pagination[:next]}&#{pagination[:query]}" %>">
+          Next →
+        </a>
+      <% else %>
+        <span class="invisible btn btn-outline-secondary btn-sm">Placeholder</span>
+      <% end %>
 
+    </div>
   </nav>
 <% end %>

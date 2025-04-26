@@ -1,22 +1,39 @@
-<h2 class="mb-4">🗂 Manage Categories</h2>
+<div class="container py-4">
+  <h2 class="mb-4 text-center">🗂 Manage Categories</h2>
 
-<form method="post" class="mb-4 d-flex gap-2">
-  <input type="text" name="category" class="form-control" placeholder="New category" required>
-  <button type="submit" class="btn btn-success">➕ Add</button>
-</form>
+  <!-- Add New Category Form -->
+  <form method="post" class="row g-2 mb-4">
+    <div class="col-12 col-md-10">
+      <input type="text" name="category" class="form-control" placeholder="New category" required>
+    </div>
+    <div class="col-12 col-md-2">
+      <button type="submit" class="btn btn-success w-100">➕ Add</button>
+    </div>
+  </form>
 
-<ul class="list-group">
-  <% @categories.each do |cat| %>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <form method="post" action="/categories/edit/<%= cat.capitalize %>" class="d-flex align-items-center gap-2 w-100">
-        <input type="text" name="new" class="form-control" value="<%= cat %>" required>
-        <button class="btn btn-sm btn-warning">✏️ Update</button>
-      </form>
-      <form method="post" action="/categories/delete/<%= cat %>" onsubmit="return confirm('Are you sure?')" class="ms-2">
-        <button class="btn btn-sm btn-danger">🗑 Delete</button>
-      </form>
-    </li>
-  <% end %>
-</ul>
+  <!-- List of Categories -->
+  <ul class="list-group">
+    <% @categories.each do |cat| %>
+      <li class="list-group-item">
+        <form method="post" action="/categories/edit/<%= cat.capitalize %>" class="row g-2 align-items-center">
+          <div class="col-12 col-md-10">
+            <input type="text" name="new" class="form-control" value="<%= cat %>" required>
+          </div>
+          <div class="col-6 col-md-1">
+            <button class="btn btn-outline-primary btn-sm w-100">✏️ Update</button>
+          </div>
+          <div class="col-6 col-md-1">
+            <form method="post" action="/categories/delete/<%= cat %>" onsubmit="return confirm('Are you sure?')">
+              <button class="btn btn-outline-danger btn-sm w-100">🗑 Delete</button>
+            </form>
+          </div>
+        </form>
+      </li>
+    <% end %>
+  </ul>
 
-<a href="/dashboard" class="btn btn-secondary mt-4">Back</a>
+  <!-- Back Button -->
+  <div class="mt-4 text-center">
+    <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+  </div>
+</div>

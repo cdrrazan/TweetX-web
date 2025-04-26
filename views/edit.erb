@@ -1,30 +1,40 @@
 <h2 class="mb-4">✏️ Edit Tweet</h2>
 
-<form action="/update/<%= @tweet['id'] %>" method="post" class="mb-4 w-75">
-  <input type="hidden" name="redirect_to" value="<%= @redirect_to %>">
-  <div class="mb-3">
-    <label class="form-label">Category</label>
-    <select name="category" class="form-select" required>
-      <% @categories.each do |cat| %>
-        <option value="<%= cat %>" <%= "selected" if cat == @tweet['category'] %>><%= cat.capitalize %></option>
-      <% end %>
-    </select>
-  </div>
+<div class="card p-4 shadow-sm">
+  <form action="/update/<%= @tweet['id'] %>" method="post" class="row g-3">
+    <input type="hidden" name="redirect_to" value="<%= @redirect_to %>">
 
-  <div class="mb-3">
-    <label class="form-label">Tweet Text</label>
-    <textarea name="tweet" id="tweetText" class="form-control" rows="4" required oninput="updateEditPreview()"><%= @tweet['tweet'] %></textarea>
-    <div id="charCount" class="form-text">0 / 280 characters</div>
-  </div>
+    <!-- Category -->
+    <div class="col-12">
+      <label class="form-label">Category</label>
+      <select name="category" class="form-select w-25" required>
+        <% @categories.each do |cat| %>
+          <option value="<%= cat %>" <%= "selected" if cat == @tweet['category'] %>><%= cat.capitalize %></option>
+        <% end %>
+      </select>
+    </div>
 
-  <div class="mb-3">
-    <label class="form-label">Preview</label>
-    <div class="border rounded bg-white p-3" id="editPreviewText" style="white-space: pre-line;"></div>
-  </div>
+    <!-- Tweet Text -->
+    <div class="col-12">
+      <label class="form-label">Tweet Text</label>
+      <textarea name="tweet" id="tweetText" class="form-control" rows="4" required oninput="updateEditPreview()"><%= @tweet['tweet'] %></textarea>
+      <div id="charCount" class="form-text text-end small">0 / 280 characters</div>
+    </div>
 
-  <button type="submit" class="btn btn-success">Save</button>
-  <a href="/dashboard" class="btn btn-secondary">Back</a>
-</form>
+    <!-- Preview -->
+    <div class="col-12">
+      <label class="form-label">Preview</label>
+      <div class="border rounded bg-light p-3" id="editPreviewText" style="white-space: pre-line; min-height: 120px;"></div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="col-12 d-flex gap-2 mt-3">
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="/dashboard" class="btn btn-secondary">Back</a>
+    </div>
+
+  </form>
+</div>
 
 <script>
   function formatTweet(text) {
@@ -47,6 +57,10 @@
   function updateEditPreview() {
     const text = document.getElementById("tweetText").value;
     document.getElementById("editPreviewText").innerText = formatTweet(text);
+
+    // Update character count live
+    const charCount = text.length;
+    document.getElementById("charCount").innerText = `${charCount} / 280 characters`;
   }
 
   window.onload = updateEditPreview;

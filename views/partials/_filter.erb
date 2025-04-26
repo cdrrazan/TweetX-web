@@ -1,12 +1,19 @@
 <% base_path, anchor = path.split('#') %>
-<form id="filter-form" class="row g-2 mb-3" data-path="<%= base_path %>" data-anchor="<%= anchor %>">
-  <div class="col-md-3">
+
+<form id="filter-form" class="row row-cols-1 row-cols-md-5 g-2 align-items-end mb-3" data-path="<%= base_path %>" data-anchor="<%= anchor %>">
+
+  <!-- ID Filter -->
+  <div class="col">
     <input type="text" name="id" value="<%= params[:id] %>" class="form-control" placeholder="Filter by ID">
   </div>
-  <div class="col-md-3">
+
+  <!-- Search Filter -->
+  <div class="col">
     <input type="text" name="search" value="<%= params[:search] %>" class="form-control" placeholder="Search tweet text">
   </div>
-  <div class="col-md-3">
+
+  <!-- Category Dropdown -->
+  <div class="col">
     <select name="category" class="form-select">
       <option value="">All Categories</option>
       <% @categories.each do |category| %>
@@ -14,16 +21,33 @@
       <% end %>
     </select>
   </div>
-  <div class="col-md-3 d-grid">
-    <button type="submit" class="btn btn-outline-primary">🔍 Apply Filters</button>
+
+  <!-- Filter Button -->
+  <div class="col d-grid">
+    <button type="submit" class="btn btn-success w-100 d-flex justify-content-center align-items-center gap-2">
+      <span class="d-none d-md-inline">🔍</span> Filter
+    </button>
   </div>
 
-  <button type="button" class="btn btn-sm btn-link" onclick="resetFilters('<%= anchor %>')">🔄 Reset Filters</button>
+  <!-- Reset Button -->
+  <div class="col d-grid">
+    <button type="button" id="reset-btn" class="btn btn-outline-secondary w-100 d-flex justify-content-center align-items-center gap-2" onclick="resetFilters('<%= anchor %>')">
+      <span class="d-none d-md-inline">🔄</span> Reset
+    </button>
+  </div>
+
 </form>
+
+<div id="loading-spinner" class="text-center my-3" style="display: none;">
+  <div class="spinner-border text-primary spinner-border-sm" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('filter-form');
+    const spinner = document.getElementById('loading-spinner');
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -40,22 +64,38 @@
       });
 
       const queryString = params.toString();
-      const url = `${basePath}${queryString ? '?' + queryString : ''}#${anchor}`;
+      let url = `${basePath}${queryString ? '?' + queryString : ''}`;
 
-      // Replace state without scrolling
+      // If on dashboard, keep anchor
+      if (anchor && (window.location.pathname === '/dashboard')) {
+        url += `#${anchor}`;
+      }
+
+      // Replace URL without reloading page
       history.replaceState(null, '', url);
 
-      // Reload the page without jumping
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      location.reload();
+      // Show spinner and fade out table
+      if (spinner) {
+        spinner.style.display = 'block';
+      }
+
+      const tableContainer = document.querySelector('.card-body');
+      if (tableContainer) {
+        tableContainer.style.opacity = 0.2;
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Actually reload after short delay
+      setTimeout(() => {
+        location.reload();
+      }, 400);
     });
 
-    // Prevent auto-scroll on hash
     if (window.location.hash) {
       const hash = window.location.hash;
       const el = document.querySelector(hash);
       if (el) {
-        // Prevent scroll to anchor after reload
         history.scrollRestoration = 'manual';
       }
     }
@@ -63,10 +103,26 @@
 
   function resetFilters(anchor) {
     const base = window.location.pathname;
-    const hash = anchor ? `#${anchor}` : '';
-    // Replace the URL without scrolling
-    history.replaceState(null, '', base + hash);
-    // Reload the page
-    window.location.reload();
+    let url = base;
+
+    if (anchor && window.location.pathname === '/dashboard') {
+      url += `#${anchor}`;
+    }
+
+    history.replaceState(null, '', url);
+
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+      spinner.style.display = 'block';
+    }
+
+    const tableContainer = document.querySelector('.card-body');
+    if (tableContainer) {
+      tableContainer.style.opacity = 0.2;
+    }
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
   }
 </script>
