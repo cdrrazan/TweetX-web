@@ -116,6 +116,16 @@ helpers do
     view_all_links += "?#{query}" unless query.empty?
     view_all_links
   end
+
+  def sort_and_reverse_by_timestamp(tweets)
+    tweets.sort_by do |row|
+      begin
+        Time.parse(row['timestamp'].to_s)
+      rescue
+        Time.at(0) # fallback if timestamp is invalid
+      end
+    end.reverse!
+  end
 end
 
 before do
@@ -178,7 +188,8 @@ get '/dashboard' do
 
   # Get the last 4 published tweets
   @published = if tweets_present?(all_published)
-    apply_filters(all_published, params).last(6).reverse
+    ap = apply_filters(all_published, params)
+    sort_and_reverse_by_timestamp(ap).first(6)
   else
     []
   end
@@ -207,8 +218,11 @@ end
 get '/published' do
   ensure_required_csvs
   @categories = load_categories
+  published = read_csv(TWEET_PUBLISHED)
+
   # Apply filters & Paginate
-  filtered = apply_filters(read_csv(TWEET_PUBLISHED), params).reverse
+  filtered = apply_filters(published, params)
+  filtered = sort_and_reverse_by_timestamp(filtered)
   result = paginate(filtered, params, '/published')
   @published = result[:items]
   @pagination = result[:pagination]
