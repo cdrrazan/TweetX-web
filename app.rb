@@ -302,11 +302,14 @@ post '/tweet-now/:id' do
     category = upcoming_tweet[:category]
     formatted = scheduler.format_tweet(tweet)
     # Remove this line and uncomment the below line when you have the actual tweet posting logic
-    tweet_response_url = 'https://x.com/cdrrazan/status/1905966122580770942'
-    # tweet_response_url = scheduler.post_tweet_and_get_url(formatted)
-    # scheduler.send_to_published(category, tweet)
+    # tweet_id_url = scheduler.post_tweet_and_get_id_url(formatted)
+    # scheduler.send_to_published(tweet_id_url[:id], category, tweet)
     # scheduler.remove_from_tweet_collection(upcoming_tweet[:id])
+    # Uncomment and use tweet_id_url[:url] when you have the actual tweet posting logic
+    # tweet_response_url = tweet_id_url[:url]
+    # For now, we will simulate a successful tweet posting
 
+    tweet_response_url = 'https://x.com/cdrrazan/status/1905966122580770942'
     { success: true, url: tweet_response_url }.to_json
   rescue => e
     status 500

@@ -49,9 +49,10 @@ class Scheduler
       response = @client.post('tweets', { text: formatted_tweet }.to_json)
 
       if response.dig(:data, :id) || response.dig('data', 'id')
+        obj_id = response.dig(:data, :id) || response.dig('data', 'id')
         puts "✅ Tweeted: #{tweet}"
         # Move the tweet to the published list
-        send_to_published(category, tweet)
+        send_to_published(obj_id, category, tweet)
       else
         puts "❌ Failed to tweet: #{response.status} - #{response.body}"
       end
@@ -95,11 +96,10 @@ class Scheduler
     CSV.read(TWEET_PUBLISHED_FILE, headers: true).map { |row| row['text'] }
   end
 
-  def send_to_published(category, text)
+  def send_to_published(id, category, text)
     CSV.open(TWEET_PUBLISHED_FILE, 'a+') do |csv|
       csv << %w[id category text timestamp] if csv.count.zero?
       timestamp = Time.now.utc.iso8601
-      id = SecureRandom.uuid
 
       csv << [id, category, text, timestamp]
     end
@@ -189,10 +189,11 @@ class Scheduler
     end
   end
 
-  def post_tweet_and_get_url(text)
+  def post_tweet_and_get_id_url(text)
     tweet_obj = @client.post("tweets", { text: text }.to_json)
-    tweet_id = tweet_obj.dig("data", "id")
-    "https://x.com/#{ENV['X_USERNAME']}/status/#{tweet_id}"
+    id = tweet_obj.dig("data", "id")
+    url = "https://x.com/#{ENV['X_USERNAME']}/status/#{id}"
+    { id: id, url: url }
   end
 
   def format_tweet(text)
