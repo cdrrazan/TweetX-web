@@ -189,7 +189,7 @@ get '/dashboard' do
   # Get the last 4 published tweets
   @published = if tweets_present?(all_published)
     ap = apply_filters(all_published, params)
-    sort_and_reverse_by_timestamp(ap).first(6)
+    sort_and_reverse_by_timestamp(ap).first(7)
   else
     []
   end
@@ -265,7 +265,7 @@ post '/submit' do
     else
       # Add fake IDs to existing rows
       rows = existing.map do |row|
-        { 'id' => SecureRandom.uuid, 'category' => row['category'], 'tweet' => row['tweet'] }
+        { 'id' => SecureRandom.hex(4), 'category' => row['category'], 'tweet' => row['tweet'] }
       end
     end
   end
@@ -273,7 +273,7 @@ post '/submit' do
   # Add new tweets
   categories.each do |category|
     tweets.each do |tweet|
-      rows << { 'id' => SecureRandom.uuid, 'category' => category, 'tweet' => tweet }
+      rows << { 'id' => SecureRandom.hex(4), 'category' => category, 'tweet' => tweet }
     end
   end
 

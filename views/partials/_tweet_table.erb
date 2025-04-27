@@ -6,13 +6,13 @@
   <table class="table table-bordered table-sm table-hover align-middle mt-3">
     <thead class="table-light">
     <tr>
-      <th style="width: 20%;">ID</th>
+      <th style="width: 10%;">ID</th>
       <th style="width: 10%;">Category</th>
-      <th style="width: 45%;">Tweet</th>
+      <th style="width: 56%;">Tweet</th>
       <% if tweets.first&.key?('timestamp') %>
         <th style="width: 15%;">Published At</th>
       <% end %>
-      <th style="width: <%= tweets.first&.key?('timestamp') ? '10%' : '25%' %>;">Actions</th>
+      <th style="width: <%= tweets.first&.key?('timestamp') ? '9%' : '36%' %>;">Actions</th>
     </tr>
     </thead>
     <tbody>
