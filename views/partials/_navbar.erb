@@ -1,28 +1,54 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light rounded shadow-sm px-3 py-2 mb-4">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-3 py-2 mb-4 rounded" style="font-family: 'Outfit', sans-serif;">
   <div class="container-fluid">
 
-    <!-- Left: Logo -->
-    <a href="/dashboard" class="navbar-brand fw-bold">TweetX</a>
+    <!-- Brand Left -->
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/dashboard">
+      <i class="bi bi-lightning-charge-fill text-primary"></i> TweetX
+    </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+    <!-- Hamburger for mobile -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <i class="bi bi-list fs-3"></i>
     </button>
 
-    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
 
-      <!-- Center: Navigation links -->
-      <div class="mx-auto d-flex flex-wrap gap-2 justify-content-center">
-        <a href="/dashboard" class="btn btn-outline-success btn-sm">🏠 Dashboard</a>
-        <a href="/categories" class="btn btn-outline-secondary btn-sm">🗂 Categories</a>
-        <a href="/new" class="btn btn-outline-primary btn-sm">➕ New</a>
-      </div>
+      <!-- Center Nav Links -->
+      <ul class="navbar-nav mx-auto d-flex align-items-center gap-3 mt-3 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-pill btn-outline-success text-success fw-semibold" href="/dashboard">
+            🏠 Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-pill btn-outline-secondary text-secondary fw-semibold" href="/categories">
+            🗂 Categories
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-pill btn-outline-primary text-primary fw-semibold" href="/new">
+            ➕ New
+          </a>
+        </li>
+      </ul>
 
-      <!-- Right: Logout -->
-      <form method="post" action="/logout" class="d-flex">
-        <button class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+      <!-- Right Logout -->
+      <form method="post" action="/logout" class="d-flex mt-3 mt-lg-0">
+        <button class="btn btn-outline-danger px-3 py-2 rounded-pill fw-semibold">
+          🚪 Logout
+        </button>
       </form>
 
     </div>
+
   </div>
 </nav>
+
+<style>
+    .nav-link:hover {
+        background-color: #f5f5f5;
+        transition: 0.3s ease;
+    }
+</style>
