@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TweetX Scheduler Module
+# Handles tweet scheduling, posting, and management logic
+# Interacts with Twitter/X API and CSV data files
+
 require 'csv'
 require 'dotenv/load'
 require 'time'
@@ -8,12 +12,16 @@ require 'debug'
 require 'tzinfo'
 
 class Scheduler
+  # Directory paths for data files
   ROOT_DIR = File.expand_path('../../', __dir__)
   DATA_DIR = File.join(ROOT_DIR, 'data')
 
+  # CSV file paths
   TWEET_COLLECTION_FILE = File.join(DATA_DIR, 'tweet_collection.csv')
   TWEET_PUBLISHED_FILE = File.join(DATA_DIR, 'tweet_published.csv')
 
+  # Initialize Scheduler with Twitter API client
+  # Sets up X API client using environment variables
   def initialize
     @client = X::Client.new(
       api_key: ENV['X_API_KEY'],
@@ -23,7 +31,10 @@ class Scheduler
     )
   end
 
-  # RUN
+  # Execute tweet posting workflow
+  # Selects appropriate tweet, validates, and posts to Twitter
+  # @param dry_run [Boolean] if true, only preview without posting
+  # @return [void]
   def run(dry_run: false)
     if select_tweet.nil?
       puts '🚫 No text available to tweet.'
@@ -51,7 +62,6 @@ class Scheduler
       if response.dig(:data, :id) || response.dig('data', 'id')
         obj_id = response.dig(:data, :id) || response.dig('data', 'id')
         puts "✅ Tweeted: #{tweet}"
-        # Move the tweet to the published list
         send_to_published(obj_id, category, tweet)
       else
         puts "❌ Failed to tweet: #{response.status} - #{response.body}"
@@ -61,12 +71,17 @@ class Scheduler
     end
   end
 
+  # Validate tweet text
+  # @param text [String] tweet text to validate
+  # @return [Boolean] true if tweet is valid (not empty, ≤ 280 chars)
   def valid_tweet?(text)
     return false if text.nil? || text.strip.empty? || text.length > 280
 
     true
   end
 
+  # Select a tweet to post based on current hour and category
+  # @return [Array, nil] array containing [category, tweet] or nil if none available
   def select_tweet
     return nil unless File.exist?(TWEET_COLLECTION_FILE)
 
@@ -90,12 +105,19 @@ class Scheduler
     [unpublished['category'], unpublished['tweet']]
   end
 
+  # Get list of all published tweet texts
+  # @return [Array] array of published tweet text strings
   def published_tweets
     return [] unless File.exist?(TWEET_PUBLISHED_FILE)
 
     CSV.read(TWEET_PUBLISHED_FILE, headers: true).map { |row| row['text'] }
   end
 
+  # Save a tweeted item to published tweets CSV
+  # @param id [String] tweet ID from Twitter API
+  # @param category [String] tweet category
+  # @param text [String] tweet content
+  # @return [void]
   def send_to_published(id, category, text)
     CSV.open(TWEET_PUBLISHED_FILE, 'a+') do |csv|
       csv << %w[id category text timestamp] if csv.count.zero?
@@ -104,8 +126,9 @@ class Scheduler
       csv << [id, category, text, timestamp]
     end
   end
-  
-  # PREVIEW TWEETS
+
+  # Preview the tweet that would be posted next
+  # @return [void]
   def preview
     tweet_info = select_tweet
 
@@ -120,19 +143,23 @@ class Scheduler
     end
   end
 
+  # Determine category for current hour based on time-based categories
+  # Categories: 5-8: Motivation, 9-12: Devtip, 13-16: Branding, 17-20: BuiltWith, 21-23: Ebook
+  # @return [String, nil] category name for current hour or nil
   def category_for_current_hour
     hour = my_timezone.hour
 
     case hour
-      when 5..8 then 'Motivation'
-      when 9..12 then 'Devtip'
-      when 13..16 then 'Branding'
-      when 17..20 then 'BuiltWith'
-      when 21..23 then 'Ebook'
+    when 5..8 then 'Motivation'
+    when 9..12 then 'Devtip'
+    when 13..16 then 'Branding'
+    when 17..20 then 'BuiltWith'
+    when 21..23 then 'Ebook'
     end
   end
 
-  # LIST UNPUBLISHED TWEETS
+  # List all unpublished tweets
+  # @return [void]
   def list_tweets
     all = CSV.read(TWEET_COLLECTION_FILE, headers: true)
     published = published_tweets
@@ -148,7 +175,8 @@ class Scheduler
     end
   end
 
-  # LIST PUBLISHED TWEETS
+  # List all published tweets
+  # @return [void]
   def list_published
     if File.exist?(TWEET_PUBLISHED_FILE)
       published = CSV.read(TWEET_PUBLISHED_FILE, headers: true)
@@ -161,7 +189,10 @@ class Scheduler
     end
   end
 
-  # ADD TWEET
+  # Add a new tweet to the collection
+  # @param text [String] tweet content
+  # @param category [String] tweet category
+  # @return [void]
   def add_tweet(text, category)
     CSV.open(TWEET_COLLECTION_FILE, 'a+') do |csv|
       csv << %w[id category text] if csv.count.zero?
@@ -171,7 +202,9 @@ class Scheduler
     puts "✅ Added tweet to queue under '#{category}'"
   end
 
-  # TWEET NOW
+  # Find an upcoming tweet by its ID
+  # @param id [String] tweet ID to search for
+  # @return [Hash, nil] tweet hash or nil if not found
   def find_upcoming_by_id(id)
     all = CSV.read(TWEET_COLLECTION_FILE, headers: true)
     row = all.find { |r| r['id'] == id }
@@ -180,6 +213,9 @@ class Scheduler
     { id: row['id'], category: row['category'], tweet: row['tweet'] }
   end
 
+  # Remove a tweet from the collection (after publishing)
+  # @param id [String] tweet ID to remove
+  # @return [void]
   def remove_from_tweet_collection(id)
     all = CSV.read(TWEET_COLLECTION_FILE, headers: true)
     updated = all.reject { |r| r['id'] == id }
@@ -189,6 +225,9 @@ class Scheduler
     end
   end
 
+  # Post a tweet and return its ID and URL
+  # @param text [String] tweet content to post
+  # @return [Hash] hash containing :id and :url
   def post_tweet_and_get_id_url(text)
     tweet_obj = @client.post("tweets", { text: text }.to_json)
     id = tweet_obj.dig("data", "id")
@@ -196,6 +235,9 @@ class Scheduler
     { id: id, url: url }
   end
 
+  # Format tweet text for posting (add line breaks and organize hashtags)
+  # @param text [String] raw tweet text
+  # @return [String] formatted tweet text
   def format_tweet(text)
     # Add line break after the first sentence
     formatted = text.sub(/\. /, ".\n\n")
@@ -204,8 +246,10 @@ class Scheduler
     formatted.sub(/(#[\w]+)/, "\n\n\\1")
   end
 
+  # Get current time in specified timezone
+  # @param city [String] timezone name (default: 'Asia/Kathmandu')
+  # @return [Time] current time in specified timezone
   def my_timezone(city = 'Asia/Kathmandu')
-    # Get the current time in the specified timezone
     tz = TZInfo::Timezone.get(city)
     tz.now
   end

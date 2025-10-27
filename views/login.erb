@@ -1,3 +1,7 @@
+<!--
+  TweetX Login View
+  Authentication page for TweetX web application
+-->
 <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light px-3">
   <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
     <h2 class="mb-4 text-center">🔐 TweetX Login</h2>
@@ -7,16 +11,19 @@
     <% end %>
 
     <form method="post" action="/login">
+      <!-- Username Field -->
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input class="form-control" type="text" id="username" name="username" value="admin" required>
       </div>
 
+      <!-- Password Field -->
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input class="form-control" type="password" id="password" name="password" value="password" required>
       </div>
 
+      <!-- Remember Me Checkbox -->
       <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me" value="0">
         <label class="form-check-label" for="rememberMe">
@@ -24,6 +31,7 @@
         </label>
       </div>
 
+      <!-- Submit Button -->
       <button type="submit" class="btn btn-primary w-100">🔓 Login</button>
     </form>
   </div>

@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# TweetX CLI Binary
+# Executable script for running TweetX command-line interface
+# Run: bin/tweetx [command]
+
 require 'bundler/setup'
 require_relative '../lib/tweetx'
+
+# Start the CLI
 Tweetx::CLI.start

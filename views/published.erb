@@ -1,4 +1,9 @@
+<!--
+  TweetX Published Tweets View
+  Displays all published tweets with filtering and pagination
+-->
 <h3 class="mb-3">Published | All Tweets</h3>
+
 <!-- Filter form -->
 <%= erb :'partials/_filter', locals: { path: '/published', categories: @categories, params: @params } %>
 

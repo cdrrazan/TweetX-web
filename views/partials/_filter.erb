@@ -1,3 +1,7 @@
+<!--
+  TweetX Filter Partial
+  Provides filtering controls for tweets (ID, search, category)
+-->
 <% base_path, anchor = path.split('#') %>
 
 <form id="filter-form" class="row row-cols-1 row-cols-md-5 g-2 align-items-end mb-3" data-path="<%= base_path %>" data-anchor="<%= anchor %>">
@@ -38,12 +42,14 @@
 
 </form>
 
+<!-- Loading Spinner -->
 <div id="loading-spinner" class="text-center my-3" style="display: none;">
   <div class="spinner-border text-primary spinner-border-sm" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
 
+<!-- JavaScript for filter functionality -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('filter-form');
@@ -86,7 +92,7 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Actually reload after short delay
+      // Reload after short delay
       setTimeout(() => {
         location.reload();
       }, 400);

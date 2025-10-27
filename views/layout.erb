@@ -1,3 +1,8 @@
+<!--
+  TweetX Layout Template
+  Main layout wrapper for all pages
+  Includes Bootstrap 5, Bootstrap Icons, and SweetAlert2
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,40 +24,44 @@
 
   <!-- Custom Styles -->
   <style>
-      body {
-          font-family: 'Outfit', sans-serif;
-          font-size: 1.1em;
-          background-color: #f8f9fa;
-      }
-      .toast-container {
-          z-index: 1080;
-      }
-      .badge {
-          font-size: 0.9rem;
-          padding: 0.4em 0.75em;
-      }
-      .nav-link {
-          font-weight: 500;
-      }
-      .footer {
-          font-size: 0.9rem;
-          color: #777;
-          margin-top: 4rem;
-      }
+    body {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1em;
+      background-color: #f8f9fa;
+    }
+    .toast-container {
+      z-index: 1080;
+    }
+    .badge {
+      font-size: 0.9rem;
+      padding: 0.4em 0.75em;
+    }
+    .nav-link {
+      font-weight: 500;
+    }
+    .footer {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 4rem;
+    }
   </style>
 </head>
 
 <% body_class = session[:logged_in] ? "bg-light py-3" : "d-flex justify-content-center align-items-center vh-100 bg-light" %>
 <body class="<%= body_class %>">
 
+<!-- Flash Messages -->
 <%= erb :'partials/_flash' %>
 
 <% if session[:logged_in] %>
   <div class="container" style="max-width: 1096px;">
+    <!-- Navigation -->
     <%= erb :'partials/_navbar' %>
 
+    <!-- Main Content -->
     <%= yield %>
 
+    <!-- Footer -->
     <footer class="footer text-center mt-5">
       Last updated:
       <% if File.exist?(TWEET_COLLECTION) %>
@@ -66,6 +75,7 @@
   <%= yield %>
 <% end %>
 
+<!-- Toast Script -->
 <script>
   // Initialize and show all toasts
   document.querySelectorAll('.toast').forEach(toastEl => {
@@ -74,7 +84,7 @@
   });
 </script>
 
-<!-- Toasts -->
+<!-- Copy Toast -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
   <div id="copyToast" class="toast align-items-center text-bg-secondary border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
@@ -85,5 +95,6 @@
     </div>
   </div>
 </div>
+
 </body>
 </html>
